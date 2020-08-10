@@ -58,7 +58,7 @@ class LoadImageFromFile(object):
             
         #DANGER
         if filename[-3:]!='jpg' or filename[-3:]!='png':
-            filename = filename + '.jpg
+            filename = filename + '.jpg'
             
         img_bytes = self.file_client.get(filename)
         img = mmcv.imfrombytes(img_bytes, flag=self.color_type)
