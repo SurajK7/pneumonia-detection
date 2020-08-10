@@ -308,7 +308,45 @@ def eval_map(det_results,
     num_classes = len(det_results[0])  # positive class num
     area_ranges = ([(rg[0]**2, rg[1]**2) for rg in scale_ranges]
                    if scale_ranges is not None else None)
-
+    
+    bestspecificity98=bestspecificity97=byi=bestmetric=0
+    for thr in np.arange(0.0, 1.0, 0.005):
+        tp=fp=tn=fn=0
+        for i in range(num_imgs):
+            # if pas:
+            #     print(det_results[i])
+            #     print(annotations[i])
+            #     pas=False
+            if det_results[i][0].size!=0:
+                soft_pred = det_results[i][0][0][4]
+            else:
+                soft_pred=0
+            # print(soft_pred)
+            target = 1 if np.any(annotations[i]['labels'][:] == 0) else 0
+            pred = ge(soft_pred, thr)
+            if pred==target==1:
+                tp+=1
+            elif pred==target==0:
+                tn+=1
+            elif pred==0 and target==1:
+                fn+=1
+            elif pred==1 and target==0:
+                fp+=1
+        sensitivity = tp / (tp + fn)
+        specificity = tn / (tn + fp)
+        if sensitivity >= 0.98:
+            bestspecificity98 = specificity
+        if sensitivity >=0.97:
+            bestspecificity97=specificity
+        youdenindex = sensitivity+specificity-1
+        if youdenindex>byi:
+            bestmetric=(thr, sensitivity, specificity, youdenindex)
+            byi=youdenindex
+        
+    print('best youden index',bestmetric)
+    print('best specificity 98', bestspecificity98)
+    print('best specificity 97', bestspecificity97)
+    
     pool = Pool(nproc)
     eval_results = []
     for i in range(num_classes):
@@ -387,7 +425,7 @@ def eval_map(det_results,
     print_map_summary(
         mean_ap, eval_results, dataset, area_ranges, logger=logger)
 
-    return mean_ap, eval_results
+    return bestmetric, eval_results
 
 
 def print_map_summary(mean_ap,
