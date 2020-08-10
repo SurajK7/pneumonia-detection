@@ -97,19 +97,19 @@ data = dict(
         type=dataset_type,
         classes=classes,
         ann_file=data_root + 'annotations/instances_train_rsna.json',
-        img_prefix=data_root,
+        img_prefix=data_root + 'images_jpg',
         pipeline=train_pipeline),
     val=dict(
         type=dataset_type,
         classes=classes,
         ann_file=data_root + 'annotations/instances_val_rsna.json',
-        img_prefix=data_root,
+        img_prefix=data_root + 'images_jpg',
         pipeline=test_pipeline),
     test=dict(
         type=dataset_type,
         classes=classes,
         ann_file=data_root + 'annotations/instances_val_rsna.json',
-        img_prefix=data_root,
+        img_prefix=data_root + 'images_jpg',
         pipeline=test_pipeline))
 evaluation = dict(interval=1, metric='mAP')
 
