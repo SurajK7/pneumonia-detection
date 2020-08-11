@@ -1,6 +1,6 @@
 # optimizer
-#lr = 0.01 for bs=8
-optimizer = dict(type='SGD', lr=2.5e-3, momentum=0.9, weight_decay=0.0001, nesterov=True)#bs=4
+#lr = 0.02 for bs=16
+optimizer = dict(type='SGD', lr=2e-2, momentum=0.9, weight_decay=0.0001, nesterov=True)
 optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 # learning policy
 lr_config = dict(
